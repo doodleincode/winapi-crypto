@@ -81,12 +81,12 @@
     <ClCompile Include="test.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="libccrypto.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CCrypto\CCrypto.vcxproj">
       <Project>{f6b8a03d-41cd-499b-8155-75ff01ae9c09}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libccrypto.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

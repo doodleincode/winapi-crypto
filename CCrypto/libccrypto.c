@@ -105,7 +105,7 @@ Cleanup:
     // On error, clean up resources aquired by the CRYPTO_FILE_INFO struct
     if (status != CCRYPT_STATUS_SUCCESS) 
     {
-        CCryptoCloseHandle(pCryptoInfo);
+        CCryptCloseHandle(pCryptoInfo);
     }
 
     return status;
@@ -349,7 +349,7 @@ Cleanup:
     // On error, clean up resources aquired by the CRYPTO_FILE_INFO struct
     if (dwLastError != CCRYPT_STATUS_SUCCESS)
     {
-        CCryptoCloseHandle(pCryptoInfo);
+        CCryptCloseHandle(pCryptoInfo);
     }
 
 SetErrorAndReturn:
@@ -670,7 +670,7 @@ Cleanup:
     // On error, clean up resources aquired by the CRYPTO_FILE_INFO struct
     if (dwLastError != CCRYPT_STATUS_SUCCESS) 
     {
-        CCryptoCloseHandle(pCryptoInfo);
+        CCryptCloseHandle(pCryptoInfo);
     }
 
 SetErrorAndReturn:
@@ -840,7 +840,7 @@ Cleanup:
     // On error, clean up resources aquired by the CRYPTO_FILE_INFO struct
     if (dwLastError != CCRYPT_STATUS_SUCCESS) 
     {
-        CCryptoCloseHandle(pCryptoInfo);
+        CCryptCloseHandle(pCryptoInfo);
     }
 
 SetErrorAndReturn:
@@ -853,7 +853,7 @@ SetErrorAndReturn:
     return (dwLastError == 0);
 } /* CCryptFinalizeFile */
 
-void CCryptoCloseHandle(PFILE_CRYPTO_INFO pCryptoInfo)
+void CCryptCloseHandle(PFILE_CRYPTO_INFO pCryptoInfo)
 {
     if (pCryptoInfo->pbAESKey != NULL)
     {
@@ -871,7 +871,7 @@ void CCryptoCloseHandle(PFILE_CRYPTO_INFO pCryptoInfo)
     {
         CloseHandle(pCryptoInfo->hFile);
     }
-} /* CCryptoCloseHandle */
+} /* CCryptCloseHandle */
 
 CCRYPT_STATUS CCryptOpenAESAlgorithmProvider(PFILE_CRYPTO_INFO pCryptoInfo)
 {

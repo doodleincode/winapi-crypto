@@ -97,7 +97,7 @@ BOOL CCryptFinalizeFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey);
  *                                      by calling CCryptCreateFile()
  * @return
  */
-VOID CCryptoCloseHandle(PFILE_CRYPTO_INFO pCryptoInfo);
+VOID CCryptCloseHandle(PFILE_CRYPTO_INFO pCryptoInfo);
 
 /**
  * Initializes an AES crypto key. A string key must be created at PFILE_CRYPTO_INFO->pbAESKey

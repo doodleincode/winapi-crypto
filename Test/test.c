@@ -63,7 +63,7 @@ int main(int argc, char **argv)
             return -1;
         }
 
-        CCryptoCloseHandle(&cryptoInfo);
+        CCryptCloseHandle(&cryptoInfo);
         BCryptDestroyKey(hKey);
         BCryptCloseAlgorithmProvider(hAlgo, 0);
     }
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 
         printf("Plain text: %s\n\n", psPlainText);
 
-        CCryptoCloseHandle(&cryptoInfo);
+        CCryptCloseHandle(&cryptoInfo);
         BCryptDestroyKey(hKey);
         BCryptCloseAlgorithmProvider(hAlgo, 0);
     }
