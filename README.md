@@ -40,3 +40,7 @@ Add these under Linker -> Input -> Additional Dependencies in each project's pro
 Remove pre-compiled headers if your project is setup to use that.
 
 For the KeyGen and Test projects, add the CCrypto project as a dependency. In the project properties, under Common Properties, add a new reference to CCrypto.
+
+The CCrypto project is a static library project. Set Config Type to "Static Library" under Configuration Properties -> General.
+
+Be sure to make these settings on both Release and Debug builds.
