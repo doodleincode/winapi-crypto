@@ -27,3 +27,16 @@ Ater generating a RSA key pair, you can run the sample code. For integration int
 Known vulnerabilities
 -------------
 Currently not utilizing IVs. I will be adding this in the near future.
+
+
+Building the project
+-------------
+The project was made in Visual Studio 2013. The solution is included, if you have VS 2013 it should open out-of-the-box. It may or may not be so straight forward with old versions of Visual Studio. If that's the case, each project depends on the following libraries:
+
+Add these under Linker -> Input -> Additional Dependencies in each project's properties:
+* Crypt32.lib
+* Bcrypt.lib
+
+Remove pre-compiled headers if your project is setup to use that.
+
+For the KeyGen and Test projects, add the CCrypto project as a dependency. In the project properties, under Common Properties, add a new reference to CCrypto.
