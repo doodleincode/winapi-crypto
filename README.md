@@ -22,7 +22,7 @@ First, you will need to generate a RSA public/private key pair:
 KeyGen.exe <key_size> <public_key> <private_key>
 ```
 
-Ater generating a RSA key pair, you can run the sample code. For integration into your own project, you'll still need to use my `KeyGen.exe` tool to generate your public/private keys. Unfortunately I wasn't able to figure out how to import RSA keys generated from other tools such as `Puttygen`.
+Ater generating a RSA key pair, you can run the sample code. For integration into your own project, you'll still need to use the `KeyGen.exe` tool to generate your public/private keys. Unfortunately I wasn't able to figure out how to import RSA keys generated from other tools such as `Puttygen`.
 
 Known vulnerabilities
 -------------
@@ -31,9 +31,9 @@ Currently not utilizing IVs. I will be adding this in the near future.
 
 Building the project
 -------------
-The project was made in Visual Studio 2013. The solution is included, if you have VS 2013 it should open out-of-the-box. It may or may not be so straight forward with old versions of Visual Studio. If that's the case, each project depends on the following libraries:
+The project was made in Visual Studio 2013. The solution is included, if you have VS 2013 it should open out-of-the-box. It may or may not be so straight forward with older versions of Visual Studio. If that's the case, perform the following:
 
-Add these under Linker -> Input -> Additional Dependencies in each project's properties:
+For each project, add these libraries in the project's properties under Linker -> Input -> Additional Dependencies:
 * Crypt32.lib
 * Bcrypt.lib
 
