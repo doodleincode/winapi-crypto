@@ -20,7 +20,7 @@
 
 VOID DebugPrint(LPCSTR pszFile, LPCSTR pszFunc, DWORD dwLine, DWORD dwCode)
 {
-    printf("Error: %x in %s at function '%s' on line %d\n", dwCode, pszFile, pszFunc, dwLine);
+    printf("Error: 0x%x in %s at function '%s' on line %d\n", dwCode, pszFile, pszFunc, dwLine);
 }
 #endif
 
@@ -125,6 +125,13 @@ BOOL CCryptReadFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey, LPBYT
     PBYTE pbHmacCalc = NULL;  // The calculated HMAC
     OVERLAPPED overLapped;
 
+    // Make sure file handle that should have been created from CCryptCreateFile() is valid
+    if (pCryptoInfo->hFile == NULL || pCryptoInfo->hFile == INVALID_HANDLE_VALUE)
+    {
+        dwLastError = CCRYPT_STATUS_INVALID_HANDLE;
+        goto SetErrorAndReturn;
+    }
+
     // Get the file size so that we can read into the entire file
     if (INVALID_FILE_SIZE == (dwFileSize = GetFileSize(pCryptoInfo->hFile, NULL)))
     {
@@ -165,6 +172,9 @@ BOOL CCryptReadFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey, LPBYT
         if (GetLastError() != ERROR_IO_PENDING)
         {
             dwLastError = CCRYPT_STATUS_USE_DEFAULT;
+#if _DEBUG
+            DebugPrint(__FILE__, "ReadFile", __LINE__, dwLastError);
+#endif
             goto Cleanup;
         }
     }
@@ -182,7 +192,6 @@ BOOL CCryptReadFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey, LPBYT
     if (!SubString(pbFileBuffer, 0, MAGIC_SIZE, bMagic))
     {
         dwLastError = CCRYPT_STATUS_USE_DEFAULT;
-        // Jump straight to cleanup since SubString() will set GetLastError()
         goto Cleanup;
     }
 
@@ -247,6 +256,9 @@ BOOL CCryptReadFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey, LPBYT
         NULL
         )))
     {
+#if _DEBUG
+        DebugPrint(__FILE__, "RSADecrypt", __LINE__, dwLastError);
+#endif
         goto Cleanup;
     }
 
@@ -259,6 +271,9 @@ BOOL CCryptReadFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey, LPBYT
         AES256_KEY_SIZE
         )))
     {
+#if _DEBUG
+        DebugPrint(__FILE__, "CCryptHmac", __LINE__, dwLastError);
+#endif
         goto Cleanup;
     }
 
@@ -275,6 +290,9 @@ BOOL CCryptReadFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey, LPBYT
     // Get AES crypto provider
     if (CCRYPT_STATUS_SUCCESS != (dwLastError = CCryptOpenAESAlgorithmProvider(pCryptoInfo)))
     {
+#if _DEBUG
+        DebugPrint(__FILE__, "CCryptOpenAESAlgorithmProvider", __LINE__, dwLastError);
+#endif
         goto Cleanup;
     }
 
@@ -399,14 +417,15 @@ BOOL CCryptWriteFile(PFILE_CRYPTO_INFO pCryptoInfo, LPBYTE pbBuffer, DWORD dwByt
         ))
     {
         dwLastError = GetLastError();
-#if _DEBUG
-        DebugPrint(__FILE__, "ReadFile", __LINE__, dwLastError);
-#endif
+
         // If the error is not because of pending IO, then we will
         // set the error and return, otherwise we'll continue below
         // and wait for the IO operation to finish
         if (dwLastError != ERROR_IO_PENDING) 
         {
+#if _DEBUG
+            DebugPrint(__FILE__, "ReadFile", __LINE__, dwLastError);
+#endif
             goto SetErrorAndReturn;
         }
     }
@@ -483,14 +502,15 @@ BOOL CCryptWriteFile(PFILE_CRYPTO_INFO pCryptoInfo, LPBYTE pbBuffer, DWORD dwByt
             ))
         {
             dwLastError = GetLastError();
-#if _DEBUG
-            DebugPrint(__FILE__, "ReadFile", __LINE__, dwLastError);
-#endif
+
             // If the error is not because of pending IO, then we will
             // set the error and return, otherwise we'll continue below
             // and wait for the IO operation to finish
             if (dwLastError != ERROR_IO_PENDING) 
             {
+#if _DEBUG
+                DebugPrint(__FILE__, "ReadFile", __LINE__, dwLastError);
+#endif
                 goto Cleanup;
             }
         }
@@ -634,6 +654,9 @@ BOOL CCryptWriteFile(PFILE_CRYPTO_INFO pCryptoInfo, LPBYTE pbBuffer, DWORD dwByt
             // and wait for the IO operation to finish
             if (GetLastError() != ERROR_IO_PENDING) 
             {
+#if _DEBUG
+                DebugPrint(__FILE__, "WriteFile", __LINE__, GetLastError());
+#endif
                 dwLastError = CCRYPT_STATUS_USE_DEFAULT;
                 goto Cleanup;
             }
@@ -745,6 +768,9 @@ BOOL CCryptFinalizeFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey)
         // set the error and return, otherwise we'll continue below
         // and wait for the IO operation to finish
         if (GetLastError() != ERROR_IO_PENDING) {
+#if _DEBUG
+            DebugPrint(__FILE__, "ReadFile", __LINE__, GetLastError());
+#endif
             dwLastError = CCRYPT_STATUS_USE_DEFAULT;
             goto Cleanup;
         }
@@ -769,6 +795,9 @@ BOOL CCryptFinalizeFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey)
         )))
     {
         dwLastError = status;
+#if _DEBUG
+        DebugPrint(__FILE__, "CCryptHmac", __LINE__, dwLastError);
+#endif
         goto SetErrorAndReturn;
     }
 
@@ -806,6 +835,9 @@ BOOL CCryptFinalizeFile(PFILE_CRYPTO_INFO pCryptoInfo, BCRYPT_KEY_HANDLE hKey)
         // set the error and return, otherwise we'll continue below
         // and wait for the IO operation to finish
         if (GetLastError() != ERROR_IO_PENDING) {
+#if _DEBUG
+            DebugPrint(__FILE__, "WriteFile", __LINE__, GetLastError());
+#endif
             dwLastError = CCRYPT_STATUS_USE_DEFAULT;
             goto Cleanup;
         }
@@ -1015,6 +1047,9 @@ CCRYPT_STATUS RSADecrypt(BCRYPT_KEY_HANDLE hKey, PBYTE pbInput, DWORD dwInput, P
         HEAP_ZERO_MEMORY,
         dwResult)))
     {
+#if _DEBUG
+        DebugPrint(__FILE__, "HeapAlloc", __LINE__, CCRYPT_STATUS_HEAP_FAIL);
+#endif
         return CCRYPT_STATUS_HEAP_FAIL;
     }
 
@@ -1138,6 +1173,9 @@ CCRYPT_STATUS RSAImportKey(BCRYPT_ALG_HANDLE *phAlgo, BCRYPT_KEY_HANDLE *phKey, 
     else 
     {
         status = CCRYPT_STATUS_BASE64_DECODE_FAIL;
+#if _DEBUG
+        DebugPrint(__FILE__, "Base64Decode", __LINE__, status);
+#endif
     }
 
 Cleanup:
@@ -1219,6 +1257,9 @@ CCRYPT_STATUS RSAExportKey(BCRYPT_KEY_HANDLE hKey, LPCWSTR pszBlobType, LPSTR lp
     // Encode the blob to base64
     if (!Base64Encode(pbKeyBlob, dwResult, &pszBase64Encoded, &dwBase64Encoded)) {
         status = CCRYPT_STATUS_BASE64_DECODE_FAIL;
+#if _DEBUG
+        DebugPrint(__FILE__, "Base64Encode", __LINE__, status);
+#endif
         goto Cleanup;
     }
 
@@ -1324,6 +1365,9 @@ BOOL Base64Encode(PBYTE pbInput, DWORD dwInput, LPSTR *pszOutput, PDWORD pdwOutp
         pdwOutput   // _Inout_    DWORD *pcchString
         ))
     {
+#if _DEBUG
+        DebugPrint(__FILE__, "CryptBinaryToStringA", __LINE__, 0);
+#endif
         return FALSE;
     }
 
