@@ -677,6 +677,9 @@ BOOL CCryptWriteFile(PFILE_CRYPTO_INFO pCryptoInfo, LPBYTE pbBuffer, DWORD dwByt
     {
         // If we couldn't get the size of the encrypted text, bail out
         dwLastError = status;
+#if _DEBUG
+        DebugPrint(__FILE__, "WriteFile", __LINE__, dwLastError);
+#endif
     }
 
 Cleanup:

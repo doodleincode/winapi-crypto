@@ -39,15 +39,15 @@ int main(int argc, char **argv)
 
         // Write data to file
         if (!CCryptWriteFile(&cryptoInfo, pbData1, strlen(pbData1), &dwBytesWritten)) {
-            printf("CCryptWriteFile error: %d\n", GetLastError());
+            printf("CCryptWriteFile error: %x\n", GetLastError());
             return -1;
         }
         if (!CCryptWriteFile(&cryptoInfo, pbData2, strlen(pbData2), &dwBytesWritten)) {
-            printf("CCryptWriteFile error: %d\n", GetLastError());
+            printf("CCryptWriteFile error: %x\n", GetLastError());
             return -1;
         }
         if (!CCryptWriteFile(&cryptoInfo, pbData3, strlen(pbData3), &dwBytesWritten)) {
-            printf("CCryptWriteFile error: %d\n", GetLastError());
+            printf("CCryptWriteFile error: %x\n", GetLastError());
             return -1;
         }
 

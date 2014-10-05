@@ -81,7 +81,9 @@ BOOL CCryptWriteFile(PFILE_CRYPTO_INFO pCryptoInfo, LPBYTE pbBuffer, DWORD dwByt
 
 /**
  * This function is used to finalize the write to the encrypted file. It must be called
- * after all desired CCryptWriteFile() have been completed
+ * after all desired CCryptWriteFile() have been completed. The format written to the file is:
+ *
+ *  Magic number, encrypted AES key, HMAC, IV, file data
  *
  * @param   In      PFILE_CRYPTO_INFO   Pointer to a FILE_CRYPTO_INFO structure that was initialized
  *                                      by calling CCryptCreateFile()
