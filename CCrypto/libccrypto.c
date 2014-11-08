@@ -865,7 +865,7 @@ Cleanup:
     }
     if (pbEncryptedKey != NULL) 
     {
-        HeapFree(GetProcessHeap(), 0, pbFileBuffer);
+        HeapFree(GetProcessHeap(), 0, pbEncryptedKey);
     }
     if (pbHmac != NULL) 
     {
