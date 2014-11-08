@@ -1087,6 +1087,7 @@ CCRYPT_STATUS RSAImportKey(BCRYPT_ALG_HANDLE *phAlgo, BCRYPT_KEY_HANDLE *phKey, 
     DWORD dwFilesize = 0;
     DWORD dwBase64Decoded = 0;
     CCRYPT_STATUS status = CCRYPT_STATUS_SUCCESS;
+	DWORD dwNumBytesRead = 0;
 
     // Create algorithm provider for RSA
     if (!NT_SUCCESS(status = BCryptOpenAlgorithmProvider(phAlgo, BCRYPT_RSA_ALGORITHM, NULL, 0))) 
@@ -1144,11 +1145,11 @@ CCRYPT_STATUS RSAImportKey(BCRYPT_ALG_HANDLE *phAlgo, BCRYPT_KEY_HANDLE *phKey, 
 
     // Now we can read in the file
     if (!ReadFile(
-        hFile,      // _In_         HANDLE hFile,
-        pbBuff,     // _Out_        LPVOID lpBuffer,
-        dwFilesize, // _In_         DWORD nNumberOfBytesToRead,
-        NULL,       // _Out_opt_    LPDWORD lpNumberOfBytesRead,
-        NULL        // _Inout_opt_  LPOVERLAPPED lpOverlapped
+        hFile,				// _In_         HANDLE hFile,
+        pbBuff,				// _Out_        LPVOID lpBuffer,
+        dwFilesize,			// _In_         DWORD nNumberOfBytesToRead,
+		&dwNumBytesRead,	// _Out_opt_    LPDWORD lpNumberOfBytesRead,
+        NULL				// _Inout_opt_  LPOVERLAPPED lpOverlapped
         ))
     {
         status = GetLastError();
