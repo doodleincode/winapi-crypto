@@ -95,6 +95,10 @@ int main(int argc, char **argv)
 
         printf("Plain text: %s\n\n", psPlainText);
 
+        if (psPlainText != NULL) {
+            HeapFree(GetProcessHeap(), 0, psPlainText);
+        }
+
         CCryptCloseHandle(&cryptoInfo);
         BCryptDestroyKey(hKey);
         BCryptCloseAlgorithmProvider(hAlgo, 0);
